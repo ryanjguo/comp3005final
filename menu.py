@@ -21,7 +21,11 @@ def member_menu():
     return choice
 
 def trainer_menu():
-    pass
+    print("Welcome to the trainer menu.")
+
+    print("1. Update personal info")
+    print("2. Update availability slots")
+    print("3. View client profile")
 
 def admin_menu():
     pass

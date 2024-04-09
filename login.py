@@ -4,11 +4,9 @@ from psycopg2 import Error
 
 DB_NAME = "gym"
 DB_USER = "postgres"
-DB_PASSWORD = "660caa4e5c"
+DB_PASSWORD = "RyanGuo3005"
 DB_HOST = "localhost"
 DB_PORT = "5432"
-
-currUser = 1324
 
 try:
     connection = psycopg2.connect(
@@ -20,20 +18,6 @@ try:
     )
     cursor = connection.cursor()
     print("Connected to database successfully")
-except Error as e:
-    print(f"Error while connecting to PostgreSQL: {e}")
-    exit()
-
-try:
-    connection = psycopg2.connect(
-        dbname=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        host=DB_HOST,
-        port=DB_PORT
-    )
-    cursor = connection.cursor()
-    print("Connected to the database successfully!")
 except Error as e:
     print(f"Error while connecting to PostgreSQL: {e}")
     exit()
@@ -131,7 +115,6 @@ def create_admin(username, password, email, fullname, role):
         print(f"Error creating member: {e}")
 
 def member_login():
-    global currUser
     print("You chose option 1")
     username = input("Enter your username: ")
     password = input("Enter your password: ")
@@ -145,17 +128,16 @@ def member_login():
         print ("USER ID " + str(member[0]))
 
         if member:
-            print("Login successful!")
-            currUser = member[0]
-            return True
+            print(f"member id is {member[0]}")
+            return member[0]
         else:
             print("Invalid username or password. Please try again.")
-            return False
+            return
 
     except Error as e:
         
         print(f"Error during login: {e}")
-        return False
+        return
 
 
 def trainer_login():

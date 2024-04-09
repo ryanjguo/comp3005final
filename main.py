@@ -25,13 +25,11 @@ def main():
         print("Invalid choice. Please try again.")
 
     if role == 'member':
-        login = member_login()
-        if login:
+        member_id = member_login()
+        if member_id != 0:
             choice = member_menu()
-            print(currUser)
             if choice == '1':
-                print(currUser)
-                result = update_member(currUser)
+                result = update_member(member_id)
             elif choice == '2':
                 result = update_fitness_goal()
             elif choice == '3':

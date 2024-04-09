@@ -1,10 +1,3 @@
-DROP DATABASE IF EXISTS newgym;
-
-CREATE DATABASE newgym;
-
-\c newgym
-
-
 CREATE TABLE Members (
     member_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE,
