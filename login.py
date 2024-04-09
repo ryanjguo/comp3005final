@@ -74,7 +74,7 @@ def create_account():
     else:
         print("Invalid choice. Please try again.")
     
-    return
+    return choice.lower()
 
 def create_member(username, password, email, fullname, dob, gender, fitness_goal):
     cursor.execute(
