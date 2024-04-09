@@ -8,6 +8,8 @@ DB_PASSWORD = "660caa4e5c"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
+currUser = 1324
+
 try:
     connection = psycopg2.connect(
         dbname=DB_NAME,
@@ -128,9 +130,33 @@ def create_admin(username, password, email, fullname, role):
         connection.rollback() 
         print(f"Error creating member: {e}")
 
-# Login options
 def member_login():
+    global currUser
     print("You chose option 1")
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+
+    try:
+        cursor.execute(
+            sql.SQL("SELECT * FROM members WHERE username = %s AND password = %s"),
+            (username, password)
+        )
+        member = cursor.fetchone()
+        print ("USER ID " + str(member[0]))
+
+        if member:
+            print("Login successful!")
+            currUser = member[0]
+            return True
+        else:
+            print("Invalid username or password. Please try again.")
+            return False
+
+    except Error as e:
+        
+        print(f"Error during login: {e}")
+        return False
+
 
 def trainer_login():
     print("You chose option 2")
@@ -138,13 +164,3 @@ def trainer_login():
 def admin_login():
     print("You chose option 3")
 
-
-# Menu options
-def member_menu():
-    pass
-
-def trainer_menu():
-    pass
-
-def admin_menu():
-    pass

@@ -2,6 +2,7 @@ from login import *
 from menu import *
 from memFunc import *
 
+
 def main():
     print("Welcome to Health and Fitness Management Club!")
     print("Would you like to login as: ")
@@ -13,35 +14,38 @@ def main():
     choice = input("Enter your choice: ")
 
     if choice == '1':
-        role = member_login()
+        role = 'member'
     elif choice == '2':
-        role = trainer_login()
+        role = 'trainer'
     elif choice == '3':
-        role = admin_login()
+        role = 'admin'
     elif choice == '4':
         role = create_account()
     else:
         print("Invalid choice. Please try again.")
 
     if role == 'member':
-        choice = member_menu()
-
-        if choice == '1':
-            result = update_member()
-        elif choice == '2':
-            result = update_fitness_goal()
-        elif choice == '3':
-            result = update_health_metrics()
-        elif choice == '4':
-            pass
-        elif choice == '5':
-            pass
-        elif choice == '6':
-            pass
-        elif choice == '7':
-            pass
-        else:
-            print("Invalid choice. Please try again.")
+        login = member_login()
+        if login:
+            choice = member_menu()
+            print(currUser)
+            if choice == '1':
+                print(currUser)
+                result = update_member(currUser)
+            elif choice == '2':
+                result = update_fitness_goal()
+            elif choice == '3':
+                result = update_health_metrics()
+            elif choice == '4':
+                pass
+            elif choice == '5':
+                pass
+            elif choice == '6':
+                pass
+            elif choice == '7':
+                pass
+            else:
+                print("Invalid choice. Please try again.")
 
     elif role == 'trainer':
         choice = trainer_menu()
