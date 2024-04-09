@@ -1,7 +1,6 @@
 from login import *
 
 def main():
-    connectDb()
     print("Welcome to Health and Fitness Management Club!")
     print("Would you like to login as: ")
     print("1. Member")
