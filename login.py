@@ -22,6 +22,20 @@ except Error as e:
     print(f"Error while connecting to PostgreSQL: {e}")
     exit()
 
+try:
+    connection = psycopg2.connect(
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
+        port=DB_PORT
+    )
+    cursor = connection.cursor()
+    print("Connected to the database successfully!")
+except Error as e:
+    print(f"Error while connecting to PostgreSQL: {e}")
+    exit()
+
 # Account creation
 def create_account():
     print("You chose to create a new account.")
