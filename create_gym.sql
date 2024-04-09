@@ -1,3 +1,10 @@
+DROP DATABASE IF EXISTS newgym;
+
+CREATE DATABASE newgym;
+
+\c newgym
+
+
 CREATE TABLE Members (
     member_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE,
@@ -14,8 +21,16 @@ CREATE TABLE Trainers (
     username VARCHAR(50) UNIQUE,
     password VARCHAR(50), 
     email VARCHAR(100),
-    full_name VARCHAR(100),
-    expertise_area VARCHAR(100)
+    full_name VARCHAR(100)
+);
+
+CREATE TABLE AvailabilitySlots (
+    slot_id SERIAL PRIMARY KEY,
+    trainer_id INT,
+    day_of_week VARCHAR(20),
+    start_time TIME,
+    end_time TIME,
+    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id)
 );
 
 CREATE TABLE AdminStaff (
@@ -50,11 +65,11 @@ CREATE TABLE Schedules (
     member_id INT,
     trainer_id INT,
     class_id INT,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP,
+    availability_slot_id INT,
     status VARCHAR(20),
     FOREIGN KEY (member_id) REFERENCES Members(member_id),
-    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id)
+    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id),
+    FOREIGN KEY (availability_slot_id) REFERENCES AvailabilitySlots(slot_id)
 );
 
 CREATE TABLE Classes (

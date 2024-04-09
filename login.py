@@ -57,12 +57,10 @@ def create_account():
         password = input("Choose your password: ")
         email = input("Enter your email: ")
         fullname = input("Enter your full name: ")
-        expertise = input("Enter your expertise: ")
 
-        create_trainer(username, password, email, fullname, expertise)
+        create_trainer(username, password, email, fullname)
 
     elif choice.lower() == 'admin':
-
         username = input("Choose your account name: ")
         password = input("Choose your password: ")
         email = input("Enter your email: ")
@@ -77,19 +75,58 @@ def create_account():
     return choice.lower()
 
 def create_member(username, password, email, fullname, dob, gender, fitness_goal):
-    cursor.execute(
-        sql.SQL("INSERT INTO members (username, password, email, full_name, date_of_birth, gender, fitness_goal) VALUES (%s, %s, %s, %s, %s, %s, %s)"),
-        (username, password, email, fullname, dob, gender, fitness_goal)
-    )
+    try:
+        cursor.execute(
+            sql.SQL("INSERT INTO members (username, password, email, full_name, date_of_birth, gender, fitness_goal) VALUES (%s, %s, %s, %s, %s, %s, %s)"),
+            (username, password, email, fullname, dob, gender, fitness_goal)
+        )
+        connection.commit()
+        print("Member created successfully")
+    except Error as e:
+        connection.rollback() 
+        print(f"Error creating member: {e}")
 
-    connection.commit()
-    print("commited sucessfully")
+def create_trainer(username, password, email, fullname):
+    try:
+        cursor.execute(
+            sql.SQL("INSERT INTO trainers (username, password, email, full_name) VALUES (%s, %s, %s, %s, %s) RETURNING trainer_id"),
+            (username, password, email, fullname)
+        )
+        trainer_id = cursor.fetchone()[0]
+        
+        availability_slots = []
+        while True:
+            day_of_week = input("Enter day of the week (e.g., Monday): ")
+            start_time = input("Enter start time (HH:MM): ")
+            end_time = input("Enter end time (HH:MM): ")
+            availability_slots.append((trainer_id, day_of_week, start_time, end_time))
+            another_slot = input("Do you want to add another availability slot? (yes/no): ").lower()
+            if another_slot != 'yes':
+                break
+        
+        for slot in availability_slots:
+            cursor.execute(
+                sql.SQL("INSERT INTO AvailabilitySlots (trainer_id, day_of_week, start_time, end_time) VALUES (%s, %s, %s, %s)"),
+                slot
+            )
+        
+        connection.commit()
+        print("Trainer and availability slots created successfully")
+    except Error as e:
+        connection.rollback()
+        print(f"Error creating trainer and availability slots: {e}")
 
-def create_trainer():
-    pass
-
-def create_admin():
-    pass
+def create_admin(username, password, email, fullname, role):
+    try:
+        cursor.execute(
+            sql.SQL("INSERT INTO adminstaff (username, password, email, full_name, role) VALUES (%s, %s, %s, %s, %s)"),
+            (username, password, email, fullname, role)
+        )
+        connection.commit()
+        print("Member created successfully")
+    except Error as e:
+        connection.rollback() 
+        print(f"Error creating member: {e}")
 
 # Login options
 def member_login():
