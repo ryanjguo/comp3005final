@@ -46,7 +46,3 @@ def update_health_metrics(member_id, **kwargs):
     except Error as e:
         print(f"Error updating health metrics: {e}")
         connection.rollback()
-
-
-
-

@@ -27,5 +27,9 @@ def trainer_menu():
     print("2. Update availability slots")
     print("3. View client profile")
 
+    choice = input("Enter your choice (#): ")
+
+    return choice
+
 def admin_menu():
     pass

@@ -4,7 +4,7 @@ from psycopg2 import Error
 
 DB_NAME = "gym"
 DB_USER = "postgres"
-DB_PASSWORD = "RyanGuo3005"
+DB_PASSWORD = "660caa4e5c"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -34,9 +34,8 @@ def create_account():
         fullname = input("Enter your full name: ")
         dob = input("Enter your date of birth (YYYY-MM-DD): ")
         gender = input("Enter your gender: ")
-        fitness_goal = input("Enter your fitness goal: ")
 
-        create_member(username, password, email, fullname, dob, gender, fitness_goal)
+        create_member(username, password, email, fullname, dob, gender)
 
     elif choice.lower() == 'trainer':
         username = input("Choose your account name: ")
@@ -60,11 +59,11 @@ def create_account():
     
     return choice.lower()
 
-def create_member(username, password, email, fullname, dob, gender, fitness_goal):
+def create_member(username, password, email, fullname, dob, gender):
     try:
         cursor.execute(
-            sql.SQL("INSERT INTO members (username, password, email, full_name, date_of_birth, gender, fitness_goal) VALUES (%s, %s, %s, %s, %s, %s, %s)"),
-            (username, password, email, fullname, dob, gender, fitness_goal)
+            sql.SQL("INSERT INTO members (username, password, email, full_name, date_of_birth, gender) VALUES (%s, %s, %s, %s, %s, %s)"),
+            (username, password, email, fullname, dob, gender)
         )
         connection.commit()
         print("Member created successfully")
@@ -75,7 +74,7 @@ def create_member(username, password, email, fullname, dob, gender, fitness_goal
 def create_trainer(username, password, email, fullname):
     try:
         cursor.execute(
-            sql.SQL("INSERT INTO trainers (username, password, email, full_name) VALUES (%s, %s, %s, %s, %s) RETURNING trainer_id"),
+            sql.SQL("INSERT INTO trainers (username, password, email, full_name) VALUES (%s, %s, %s, %s) RETURNING trainer_id"),
             (username, password, email, fullname)
         )
         trainer_id = cursor.fetchone()[0]
@@ -139,10 +138,48 @@ def member_login():
         print(f"Error during login: {e}")
         return
 
-
 def trainer_login():
     print("You chose option 2")
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+
+    try:
+        cursor.execute(
+            sql.SQL("SELECT * FROM trainers WHERE username = %s AND password = %s"),
+            (username, password)
+        )
+        trainer = cursor.fetchone()
+
+        if trainer:
+            print("Login successful!")
+            return trainer[0] 
+        else:
+            print("Invalid username or password. Please try again.")
+            return None
+
+    except Error as e:
+        print(f"Error during login: {e}")
+        return None
 
 def admin_login():
     print("You chose option 3")
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
 
+    try:
+        cursor.execute(
+            sql.SQL("SELECT * FROM adminstaff WHERE username = %s AND password = %s"),
+            (username, password)
+        )
+        admin = cursor.fetchone()
+
+        if admin:
+            print("Login successful!")
+            return admin[0] 
+        else:
+            print("Invalid username or password. Please try again.")
+            return None
+
+    except Error as e:
+        print(f"Error during login: {e}")
+        return None

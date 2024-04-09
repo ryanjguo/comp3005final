@@ -6,7 +6,6 @@ CREATE TABLE Members (
     full_name VARCHAR(100),
     date_of_birth DATE,
     gender VARCHAR(10),
-    fitness_goal VARCHAR(100)
 );
 
 CREATE TABLE Trainers (
