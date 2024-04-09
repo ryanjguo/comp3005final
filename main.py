@@ -26,7 +26,7 @@ def main():
     print("1. Member")
     print("2. Trainer")
     print("3. Admin")
-    print("4. Create an account")
+    print("4. Create an account\n")
 
     choice = input("Enter your choice: ")
 
@@ -39,7 +39,7 @@ def main():
     elif choice == '4':
         role = create_account()
     else:
-        print("Invalid choice. Please try again.")
+        print("Invalid choice. Please try again.\n")
 
     if role == 'member':
         member_id = member_login()
@@ -48,7 +48,7 @@ def main():
             if choice == '1':
                 result = update_member(member_id)
             elif choice == '2':
-                result = update_fitness_goal()
+                result = update_fitness_goal(member_id)
             elif choice == '3':
                 result = update_health_metrics()
             elif choice == '4':
@@ -60,7 +60,7 @@ def main():
             elif choice == '7':
                 pass
             else:
-                print("Invalid choice. Please try again.")
+                print("Invalid choice. Please try again.\n")
 
     elif role == 'trainer':
         trainer_id = trainer_login()
@@ -79,7 +79,7 @@ def main():
         if admin_login != 0:
             choice = admin_menu()
     else:
-        print("Invalid choice. Please try again.")
+        print("Invalid choice. Please try again.\n")
 
 if __name__ == "__main__":
     main()

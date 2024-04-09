@@ -4,7 +4,7 @@ from psycopg2 import Error
 
 # Menu options
 def member_menu():
-    print("Welcome to the member menu.")
+    print("\nWelcome to the member menu.")
 
     print("1. Update personal info")
     print("2. Update fitness goals")

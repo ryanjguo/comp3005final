@@ -124,17 +124,14 @@ def member_login():
             (username, password)
         )
         member = cursor.fetchone()
-        print ("USER ID " + str(member[0]))
 
         if member:
-            print(f"member id is {member[0]}")
             return member[0]
         else:
             print("Invalid username or password. Please try again.")
             return
 
     except Error as e:
-        
         print(f"Error during login: {e}")
         return
 
