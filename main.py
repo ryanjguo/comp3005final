@@ -1,7 +1,6 @@
 from login import *
 
 def main():
-    connectDb()
     print("Welcome to Health and Fitness Management Club!")
     print("Would you like to login as: ")
     print("1. Member")
@@ -30,3 +29,6 @@ def main():
         choice = admin_menu()
     else:
         print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()

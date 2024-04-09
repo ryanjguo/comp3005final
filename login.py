@@ -2,11 +2,25 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2 import Error
 
-DB_NAME = ""
-DB_USER = ""
-DB_PASSWORD = ""
-DB_HOST = ""
-DB_PORT = ""
+DB_NAME = "gym"
+DB_USER = "postgres"
+DB_PASSWORD = "660caa4e5c"
+DB_HOST = "localhost"
+DB_PORT = "5432"
+
+try:
+    connection = psycopg2.connect(
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
+        port=DB_PORT
+    )
+    cursor = connection.cursor()
+    print("Connected to database successfully")
+except Error as e:
+    print(f"Error while connecting to PostgreSQL: {e}")
+    exit()
 
 # Account creation
 def create_account():
@@ -49,12 +63,13 @@ def create_account():
     return
 
 def create_member(username, password, email, fullname, dob, gender, fitness_goal):
-    connectDb()
-    try:
-        cursor.execute(
-            sql.SQL("INSERT INTO members (username, password, email, fullname, dob, gender, fitness_goal) VALUES (%s, %s, %s, %s, %s, %s, %s)"),
-            (username, password, email, fullname, dob, gender, fitness_goal)
-        )
+    cursor.execute(
+        sql.SQL("INSERT INTO members (username, password, email, full_name, date_of_birth, gender, fitness_goal) VALUES (%s, %s, %s, %s, %s, %s, %s)"),
+        (username, password, email, fullname, dob, gender, fitness_goal)
+    )
+
+    connection.commit()
+    print("commited sucessfully")
 
 def create_trainer():
     pass
