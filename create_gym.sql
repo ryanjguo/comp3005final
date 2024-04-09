@@ -5,7 +5,7 @@ CREATE TABLE Members (
     email VARCHAR(100),
     full_name VARCHAR(100),
     date_of_birth DATE,
-    gender VARCHAR(10),
+    gender VARCHAR(10)
 );
 
 CREATE TABLE Trainers (

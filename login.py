@@ -113,27 +113,30 @@ def create_admin(username, password, email, fullname, role):
         connection.rollback() 
         print(f"Error creating member: {e}")
 
-def member_login():
-    print("You chose option 1")
-    username = input("Enter your username: ")
-    password = input("Enter your password: ")
+def member_login(cursor):
+    while True:
+        print("You chose option 1")
+        username = input("Enter your username (type 'exit' to quit): ")
+        if username.lower() == 'exit':
+            print("Exiting login.")
+            return None
 
-    try:
-        cursor.execute(
-            sql.SQL("SELECT * FROM members WHERE username = %s AND password = %s"),
-            (username, password)
-        )
-        member = cursor.fetchone()
+        password = input("Enter your password: ")
 
-        if member:
-            return member[0]
-        else:
-            print("Invalid username or password. Please try again.")
-            return
+        try:
+            cursor.execute(
+                sql.SQL("SELECT * FROM members WHERE username = %s AND password = %s"),
+                (username, password)
+            )
+            member = cursor.fetchone()
 
-    except Error as e:
-        print(f"Error during login: {e}")
-        return
+            if member:
+                return member[0]
+            else:
+                print("Invalid username or password. Please try again.")
+
+        except Error as e:
+            print(f"Error during login: {e}")
 
 def trainer_login():
     print("You chose option 2")
