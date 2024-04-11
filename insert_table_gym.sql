@@ -20,3 +20,8 @@ VALUES
 ('jamesanderson', '382', 'jamesanderson@gmail.com', 'James Anderson'),
 ('emmagarcia', '571', 'emmagarcia@gmail.com', 'Emma Garcia');
 
+INSERT INTO Rooms (room_name, capacity)
+VALUES
+('512', 10),
+('145', 14),
+('518', 10)

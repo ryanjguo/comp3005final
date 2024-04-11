@@ -26,6 +26,7 @@ def trainer_menu():
     print("1. Update personal info")
     print("2. Update availability slots")
     print("3. View client profile")
+    print("4. Exit")
 
     choice = input("Enter your choice (#): ")
 
@@ -49,4 +50,7 @@ def room_management_menu():
     print("1. Display rooms and bookings")
     print("2. Book a room")
     print("3. Remove a room booking")
-    print("4. ")
+
+    choice = input("Enter your choice (#): ")
+
+    return choice

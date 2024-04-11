@@ -53,25 +53,16 @@ CREATE TABLE HealthMetrics (
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
 
-CREATE TABLE Schedules (
-    schedule_id SERIAL PRIMARY KEY,
-    member_id INT,
-    trainer_id INT,
-    class_id INT,
-    availability_slot_id INT,
-    status VARCHAR(20),
-    FOREIGN KEY (member_id) REFERENCES Members(member_id),
-    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id),
-    FOREIGN KEY (availability_slot_id) REFERENCES AvailabilitySlots(slot_id)
-);
-
 CREATE TABLE Classes (
     class_id SERIAL PRIMARY KEY,
     class_name VARCHAR(100),
     trainer_id INT,
-    schedule VARCHAR(100),
+    room_id INT,
+    start_time TIME,
+    end_time TIME,
     capacity INT,
-    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id)
+    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id),
+    FOREIGN KEY (room_id) REFERENCES Rooms(room_id)
 );
 
 CREATE TABLE Rooms (

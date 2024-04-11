@@ -92,7 +92,13 @@ def main():
             if admin_login != 0:
                 choice = admin_menu()
                 if choice == '1':
-                    result = room_management()
+                    result = room_management_menu()
+                    if result == '1':
+                        x = display_rooms_and_bookings()
+                    elif result == '2':
+                        x = equipment_monitor()
+                    elif result == '3':
+                        x = class_scheduling()
                 elif choice == '2':
                     result = equipment_monitor()
                 elif choice == '3':

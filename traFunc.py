@@ -91,3 +91,21 @@ def view_member(full_name):
 
     except Error as e:
         print(f"Error viewing member: {e}")
+
+def print_availability(trainer_id):
+    try:
+        cursor.execute(
+            sql.SQL("SELECT * FROM AvailabilitySlots WHERE trainer_id = %s"),
+            (trainer_id,)
+        )
+        availability_slots = cursor.fetchall()
+
+        if availability_slots:
+            print("Availability slots for the trainer:")
+            for slot in availability_slots:
+                print(f"Slot ID: {slot[0]}, Day of the Week: {slot[2]}, Start Time: {slot[3]}, End Time: {slot[4]}")
+        else:
+            print("No availability slots found for the trainer.")
+
+    except Error as e:
+        print(f"Error printing availability: {e}")
