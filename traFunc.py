@@ -5,7 +5,39 @@ from psycopg2 import Error
 from login import *
 
 def update_trainer(trainer_id, **kwargs):
-    return
+    try:
+        print("\nWhich field do you want to update?")
+        print("1. Username")
+        print("2. Password")
+        print("3. Email")
+        print("4. Full Name")
+        choice = int(input("Enter the number corresponding to the field you want to update: "))
+        
+        # Map user choice to column name
+        columns = {
+            1: "username",
+            2: "password",
+            3: "email",
+            4: "full_name",
+        }
+        
+        # Validate user choice
+        if choice not in columns:
+            print("Invalid choice!")
+            return
+        
+        column_name = columns[choice]
+        new_value = input(f"Enter the new value for {column_name}: ")
+        
+        query = f"UPDATE members SET {column_name} = %s WHERE member_id = %s"
+        
+        cursor.execute(query, (new_value, trainer_id))
+        connection.commit()
+        
+        print("Update successful")   
+    except Error as e:
+        print(f"Error updating member: {e}")
+        connection.rollback()
 
 def update_availability(trainer_id):
     try:

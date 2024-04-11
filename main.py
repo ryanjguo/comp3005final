@@ -65,13 +65,13 @@ def main():
                 elif choice == '3':
                     result = update_health_metrics()
                 elif choice == '4':
-                    pass
+                    result = view_exercise_routines()
                 elif choice == '5':
-                    pass
+                    result = view_fitness_achievements()
                 elif choice == '6':
-                    pass
+                    result = log_daily_stats()
                 elif choice == '7':
-                    pass
+                    result = manage_schedule()
                 else:
                     print("Invalid choice. Please try again.\n")
 
