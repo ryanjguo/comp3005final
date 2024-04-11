@@ -143,7 +143,7 @@ def view_fitness_achievements(member_id):
         min_calories = 0
         max_calories = 0
         avg_calories = 0
-        
+
         cursor.execute(
             "SELECT min(weight) FROM health_metrics WHERE member_id = %s ",
             (member_id,)
@@ -204,3 +204,24 @@ def view_fitness_achievements(member_id):
         print(f"Calories: Min - {min_calories}, Max - {max_calories}, Avg - {avg_calories}")
     except Error as e:
         print(f"Error viewing fitness achievements and statistics: {e}")
+
+
+def log_daily_stats(member_id):
+    try:
+        weight = input("Enter your weight (KG): ")
+        steps = input("Enter the number of steps taken: ")
+        calories = input("Enter the number of calories consumed: ")
+        date = input("Enter the date (YYYY-MM-DD): ")
+
+        cursor.execute(
+            "INSERT INTO health_metrics (member_id, weight, steps, calories, date) VALUES (%s, %s, %s, %s, %s)",
+            (member_id, weight, steps, calories, date)
+        )
+        connection.commit()
+        
+        print("Daily stats logged successfully.")
+        
+    except Error as e:
+        print(f"Error logging daily stats: {e}")
+        connection.rollback()
+
