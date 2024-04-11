@@ -11,8 +11,8 @@ def member_menu():
     print("3. Update health metrics")
 
     print("4. View exercise routines")
-    print("5. View fitness achievements")
-    print("6. View health statistics")
+    print("5. View fitness achievements and statistics")
+    print("6. Log daily stats")
 
     print("7. Manage schedule")
 
