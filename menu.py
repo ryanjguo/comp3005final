@@ -29,7 +29,7 @@ def trainer_menu():
     print("4. Exit")
 
     choice = input("Enter your choice (#): ")
-
+    
     return choice
 
 def admin_menu():
@@ -41,16 +41,14 @@ def admin_menu():
     print("4. Billing and Payment Processing")
 
     choice = input("Enter your choice (#): ")
-
     return choice
 
 def room_management_menu():
     print("ROOM BOOKING MANAGEMENT")
 
-    print("1. Display rooms and bookings")
-    print("2. Book a room")
-    print("3. Remove a room booking")
+    print("1. Book a class")
+    print("2. Remove a class")
+    print("3. Display classes")
 
     choice = input("Enter your choice (#): ")
-
     return choice

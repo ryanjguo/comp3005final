@@ -41,22 +41,8 @@ def update_trainer(trainer_id, **kwargs):
 
 def update_availability(trainer_id):
     try:
-        # First, fetch the current availability slots for the given trainer
-        cursor.execute(
-            sql.SQL("SELECT * FROM AvailabilitySlots WHERE trainer_id = %s"),
-            (trainer_id,)
-        )
-        availability_slots = cursor.fetchall()
-
-        if availability_slots:
-            print("Current availability slots for the trainer:")
-            for slot in availability_slots:
-                print(f"Slot ID: {slot[0]}, Day of the Week: {slot[2]}, Start Time: {slot[3]}, End Time: {slot[4]}")
-        else:
-            print("No availability slots found for the trainer.")
-
-        # Prompt the user to update or add new availability slots
         while True:
+            print_availability(trainer_id)
             print("1. Add new availability slot")
             print("2. Update existing availability slot")
             print("3. Exit")
@@ -67,12 +53,26 @@ def update_availability(trainer_id):
                 start_time = input("Enter the start time (HH:MM): ")
                 end_time = input("Enter the end time (HH:MM): ")
 
-                # Insert the new availability slot into the database
                 cursor.execute(
-                    sql.SQL("INSERT INTO AvailabilitySlots (trainer_id, day_of_week, start_time, end_time) VALUES (%s, %s, %s, %s)"),
-                    (trainer_id, day_of_week, start_time, end_time)
+                    sql.SQL("SELECT COUNT(*) FROM AvailabilitySlots WHERE trainer_id = %s AND day_of_week = %s AND NOT (start_time >= %s OR end_time <= %s)"),
+                    (trainer_id, day_of_week, end_time, start_time)
                 )
-                print("New availability slot added successfully.")
+                conflict_count = cursor.fetchone()[0]
+
+                if conflict_count == 0:
+                    try:
+                        cursor.execute(
+                            sql.SQL("INSERT INTO AvailabilitySlots (trainer_id, day_of_week, start_time, end_time) VALUES (%s, %s, %s, %s)"),
+                            (trainer_id, day_of_week, start_time, end_time)
+                        )
+                        connection.commit()
+                        print("New availability slot added successfully.")
+                    except Error as e:
+                        connection.rollback()
+                        print(f"Error adding availability slot: {e}")
+                else:
+                    print("Conflict detected with existing availability slots. Please choose a different time.")
+
 
             elif choice == '2':
                 slot_id = input("Enter the ID of the availability slot you want to update: ")
@@ -80,12 +80,27 @@ def update_availability(trainer_id):
                 start_time = input("Enter the new start time (HH:MM): ")
                 end_time = input("Enter the new end time (HH:MM): ")
 
-                # Update the existing availability slot in the database
+                # Check for conflicts with existing availability slots
                 cursor.execute(
-                    sql.SQL("UPDATE AvailabilitySlots SET day_of_week = %s, start_time = %s, end_time = %s WHERE slot_id = %s AND trainer_id = %s"),
-                    (day_of_week, start_time, end_time, slot_id, trainer_id)
+                    sql.SQL("SELECT COUNT(*) FROM AvailabilitySlots WHERE trainer_id = %s AND day_of_week = %s AND NOT (start_time >= %s OR end_time <= %s) AND slot_id != %s"),
+                    (trainer_id, day_of_week, end_time, start_time, slot_id)
                 )
-                print("Availability slot updated successfully.")
+                conflict_count = cursor.fetchone()[0]
+
+                if conflict_count == 0:
+                    try:
+                        cursor.execute(
+                            sql.SQL("UPDATE AvailabilitySlots SET day_of_week = %s, start_time = %s, end_time = %s WHERE slot_id = %s AND trainer_id = %s"),
+                            (day_of_week, start_time, end_time, slot_id, trainer_id)
+                        )
+                        connection.commit()
+                        print("Availability slot updated successfully.")
+                    except Error as e:
+                        connection.rollback()
+                        print(f"Error updating availability slot: {e}")
+                else:
+                    print("Conflict detected with existing availability slots. Please choose a different time.")
+
 
             elif choice == '3':
                 print("Exiting availability slot update.")

@@ -6,7 +6,7 @@ CREATE TABLE Members (
     full_name VARCHAR(100),
     date_of_birth DATE,
     gender VARCHAR(10),
-    bill INT(10)
+    bill INT
 );
 
 CREATE TABLE Trainers (
@@ -59,6 +59,7 @@ CREATE TABLE Classes (
     class_name VARCHAR(100),
     trainer_id INT,
     room_id INT,
+    day_of_week VARCHAR(20),
     start_time TIME,
     end_time TIME,
     capacity INT,

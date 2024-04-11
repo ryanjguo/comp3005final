@@ -53,7 +53,6 @@ def main():
         elif choice == '5':
             break
             
-
         if role == 'member':
             member_id = member_login()
             if member_id != 0:
@@ -94,15 +93,15 @@ def main():
                 if choice == '1':
                     result = room_management_menu()
                     if result == '1':
-                        x = display_rooms_and_bookings()
+                        x = make_class()
                     elif result == '2':
-                        x = equipment_monitor()
+                        x = remove_class()
                     elif result == '3':
-                        x = class_scheduling()
+                        x = display_classes()
                 elif choice == '2':
                     result = equipment_monitor()
                 elif choice == '3':
-                    result = class_scheduling()
+                    result = class_schedule_updating()
                 elif choice == '4':
                     result = billing()
         else:
