@@ -32,4 +32,21 @@ def trainer_menu():
     return choice
 
 def admin_menu():
-    pass
+    print("Welcome to the admin staff menu.")
+
+    print("1. Room Booking Management")
+    print("2. Equipment Maintenance Monitoring")
+    print("3. Class Schedule Updating")
+    print("4. Billing and Payment Processing")
+
+    choice = input("Enter your choice (#): ")
+
+    return choice
+
+def room_management_menu():
+    print("ROOM BOOKING MANAGEMENT")
+
+    print("1. Display rooms and bookings")
+    print("2. Book a room")
+    print("3. Remove a room booking")
+    print("4. ")

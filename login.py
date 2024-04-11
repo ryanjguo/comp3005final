@@ -113,7 +113,7 @@ def create_admin(username, password, email, fullname, role):
         connection.rollback() 
         print(f"Error creating member: {e}")
 
-def member_login(cursor):
+def member_login():
     while True:
         print("You chose option 1")
         username = input("Enter your username (type 'exit' to quit): ")
@@ -139,47 +139,55 @@ def member_login(cursor):
             print(f"Error during login: {e}")
 
 def trainer_login():
-    print("You chose option 2")
-    username = input("Enter your username: ")
-    password = input("Enter your password: ")
-
-    try:
-        cursor.execute(
-            sql.SQL("SELECT * FROM trainers WHERE username = %s AND password = %s"),
-            (username, password)
-        )
-        trainer = cursor.fetchone()
-
-        if trainer:
-            print("Login successful!")
-            return trainer[0] 
-        else:
-            print("Invalid username or password. Please try again.")
+    while True:
+        print("You chose option 2")
+        username = input("Enter your username (type 'exit' to quit): ")
+        if username.lower() == 'exit':
+            print("Exiting login.")
             return None
 
-    except Error as e:
-        print(f"Error during login: {e}")
-        return None
+        password = input("Enter your password: ")
+
+        try:
+            cursor.execute(
+                sql.SQL("SELECT * FROM trainers WHERE username = %s AND password = %s"),
+                (username, password)
+            )
+            trainer = cursor.fetchone()
+
+            if trainer:
+                print("Login successful!")
+                return trainer[0]
+            else:
+                print("Invalid username or password. Please try again.")
+
+        except Error as e:
+            print(f"Error during login: {e}")
+            return None
 
 def admin_login():
-    print("You chose option 3")
-    username = input("Enter your username: ")
-    password = input("Enter your password: ")
-
-    try:
-        cursor.execute(
-            sql.SQL("SELECT * FROM adminstaff WHERE username = %s AND password = %s"),
-            (username, password)
-        )
-        admin = cursor.fetchone()
-
-        if admin:
-            print("Login successful!")
-            return admin[0] 
-        else:
-            print("Invalid username or password. Please try again.")
+    while True:
+        print("You chose option 3")
+        username = input("Enter your username (type 'exit' to quit): ")
+        if username.lower() == 'exit':
+            print("Exiting login.")
             return None
 
-    except Error as e:
-        print(f"Error during login: {e}")
-        return None
+        password = input("Enter your password: ")
+
+        try:
+            cursor.execute(
+                sql.SQL("SELECT * FROM adminstaff WHERE username = %s AND password = %s"),
+                (username, password)
+            )
+            admin = cursor.fetchone()
+
+            if admin:
+                print("Login successful!")
+                return admin[0]
+            else:
+                print("Invalid username or password. Please try again.")
+
+        except Error as e:
+            print(f"Error during login: {e}")
+            return None
