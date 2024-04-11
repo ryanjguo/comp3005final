@@ -1,10 +1,10 @@
 -- Populate Members Table
 INSERT INTO Members (username, password, email, full_name, date_of_birth, gender)
 VALUES 
-('johndoe', '513', 'johndoe@gmail.com', 'John Doe', 2000-10-14, "male"),
-('georgewell', '123', 'georgewell@gmail.com', 'George Well', 1980-8-12, "male"),
-('janeausten', '718', 'janeausten@gmail.com', 'Jane Austen', 1999-10-13, 'female'),
-('wallishillary', '192', 'wallishillary@gmail.com', 'Wallis Hillary', 2004-12-14, 'female');
+('johndoe', '513', 'johndoe@gmail.com', 'John Doe', '2000-10-14', 'male'),
+('georgewell', '123', 'georgewell@gmail.com', 'George Well', '1980-8-12', 'male'),
+('janeausten', '718', 'janeausten@gmail.com', 'Jane Austen', '1999-10-13', 'female'),
+('wallishillary', '192', 'wallishillary@gmail.com', 'Wallis Hillary', '2004-12-14', 'female');
 
 -- Populate Trainers Table
 INSERT INTO Trainers (username, password, email, full_name)

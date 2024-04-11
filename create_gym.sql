@@ -5,7 +5,8 @@ CREATE TABLE Members (
     email VARCHAR(100),
     full_name VARCHAR(100),
     date_of_birth DATE,
-    gender VARCHAR(10)
+    gender VARCHAR(10),
+    bill INT(10)
 );
 
 CREATE TABLE Trainers (
@@ -61,8 +62,8 @@ CREATE TABLE Classes (
     start_time TIME,
     end_time TIME,
     capacity INT,
-    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id),
-    FOREIGN KEY (room_id) REFERENCES Rooms(room_id)
+    price INT,
+    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id)
 );
 
 CREATE TABLE Rooms (

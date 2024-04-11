@@ -4,7 +4,7 @@ from psycopg2 import Error
 
 DB_NAME = "gym"
 DB_USER = "postgres"
-DB_PASSWORD = "660caa4e5c"
+DB_PASSWORD = "RyanGuo3005"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -108,10 +108,10 @@ def create_admin(username, password, email, fullname, role):
             (username, password, email, fullname, role)
         )
         connection.commit()
-        print("Member created successfully")
+        print("Admin created successfully")
     except Error as e:
         connection.rollback() 
-        print(f"Error creating member: {e}")
+        print(f"Error creating admin: {e}")
 
 def member_login():
     while True:

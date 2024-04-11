@@ -29,7 +29,75 @@ def display_rooms_and_bookings():
         print(f"Error displaying classes: {e}")
 
 def equipment_monitor():
-    pass
+    try:
+        cursor.execute(
+            "SELECT * FROM Equipment"
+        )
+        equipment = cursor.fetchall()
+
+        for item in equipment:
+            print(f"Equipment ID: {item[0]}, Name: {item[1]}, Room: {item[2]}, Status: {item[3]}")
+
+        print("1. Update equipment status")
+        print("2. Update equipment details")
+        print("3. Add new equipment")
+        print("4. Remove equipment")
+        print("5. Exit")
+        choice = input("Enter your choice (#): ")
+
+        if choice == '1':
+            equipment_id = input("Enter the equipment ID: ")
+            new_status = input("Enter the new status: ")
+
+            cursor.execute(
+                "UPDATE Equipment SET maintenance_status = %s WHERE equipment_id = %s",
+                (new_status, equipment_id)
+            )
+            connection.commit()
+
+            print("Update successful")
+
+        elif choice == '2':
+            equipment_id = input("Enter the equipment ID: ")
+            new_name = input("Enter the new name: ")
+            new_room = input("Enter the new room: ")
+
+            cursor.execute(
+                "UPDATE Equipment SET equipment_name = %s, room_id = %s WHERE equipment_id = %s",
+                (new_name, new_room, equipment_id)
+            )
+            connection.commit()
+
+            print("Update successful")
+
+        elif choice == '3':
+            new_name = input("Enter the new equipment name: ")
+            room = input("Enter the room where the equipment is located: ")
+
+            cursor.execute(
+                "INSERT INTO Equipment (equipment_name, room_id, maintenance_status) VALUES (%s, %s, 'available')",
+                (new_name, room)
+            )
+            connection.commit()
+
+            print("Equipment added successfully")
+        
+        elif choice == '4':
+            equipment_id = input("Enter the equipment ID: ")
+
+            cursor.execute(
+                "DELETE FROM Equipment WHERE equipment_id = %s",
+                (equipment_id,)
+            )
+            connection.commit()
+
+            print("Equipment removed successfully")
+        
+        elif choice == '5':
+            return
+    
+    except Error as e:
+        print(f"Error viewing equipment: {e}")
 
 def class_scheduling():
     trainer_id = input("Enter the trainer's ID: ")

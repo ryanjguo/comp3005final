@@ -40,7 +40,7 @@ def main():
         #input validation
         while choice not in options:
             print("Invalid choice. Please try again.\n")
-            choice = input("Enter your choice: ")
+            choice = input("Enter your choice (#): ")
 
         if choice == '1':
             role = 'member'
