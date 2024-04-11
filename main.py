@@ -59,7 +59,7 @@ def main():
         if role == 'member':
             member_id = member_login()
             if member_id == 'exit':
-                break
+                continue
             if member_id != 0:
                 while choice != '9':
                     choice = member_menu()

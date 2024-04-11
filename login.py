@@ -4,7 +4,7 @@ from psycopg2 import Error
 
 DB_NAME = "gym"
 DB_USER = "postgres"
-DB_PASSWORD = "660caa4e5c"
+DB_PASSWORD = "RyanGuo3005"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -117,7 +117,7 @@ def member_login():
     while True:
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
-            print("Exiting login.")
+            print("Exiting login.\n")
             return 'exit'
 
         password = input("Enter your password: ")

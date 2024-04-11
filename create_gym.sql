@@ -49,7 +49,7 @@ CREATE TABLE HealthMetrics (
     member_id INT,
     metric_date DATE,
     weight INT,
-    steps DECIMAL(5,2), 
+    steps INT, 
     calories INT,
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
