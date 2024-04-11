@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2 import sql
 from psycopg2 import Error
-
+import math
 from login import *
 
 def update_member(member_id, **kwargs):
@@ -212,9 +212,9 @@ def view_fitness_achievements(member_id):
         avg_calories = cursor.fetchone()[0]
 
         print("\nFitness Achievements and Statistics:")
-        print(f"Weight: Min - {min_weight}, Max - {max_weight}, Avg - {avg_weight}")
-        print(f"Steps: Min - {min_steps}, Max - {max_steps}, Avg - {avg_steps}")
-        print(f"Calories: Min - {min_calories}, Max - {max_calories}, Avg - {avg_calories}")
+        print(f"Weight: Min - {min_weight}, Max - {max_weight}, Avg - {math.floor(avg_weight)}")
+        print(f"Steps: Min - {min_steps}, Max - {max_steps}, Avg - {math.floor(avg_steps)}")
+        print(f"Calories: Min - {min_calories}, Max - {max_calories}, Avg - {math.floor(avg_calories)}")
     except Error as e:
         print(f"Error viewing fitness achievements and statistics: {e}")
 
