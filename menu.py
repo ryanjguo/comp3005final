@@ -15,6 +15,8 @@ def member_menu():
     print("6. Log daily stats")
 
     print("7. Manage schedule")
+    print("8. Pay bill")
+    print("9. Exit")
 
     choice = input("Enter your choice (#): ")
 

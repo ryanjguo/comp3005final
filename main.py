@@ -35,47 +35,57 @@ def main():
 
         choice = input("Enter your choice: ")
 
-        options = ['1', '2', '3', '4', '5']
+        options = ['1', '2', '3', '4', '5', 'member', 'trainer', 'admin', 'create an account', 'exit']
 
         #input validation
         while choice not in options:
             print("Invalid choice. Please try again.\n")
-            choice = input("Enter your choice (#): ")
+            choice = input("Enter your choice (#): ").lower()
+            print(choice)
 
-        if choice == '1':
+        if choice == '1' or choice == 'member':
             role = 'member'
-        elif choice == '2':
+        elif choice == '2' or choice == 'trainer':
             role = 'trainer'
-        elif choice == '3':
+        elif choice == '3' or choice == 'admin':
             role = 'admin'
-        elif choice == '4':
+        elif choice == '4' or choice == 'create an account':
             role = create_account()
-        elif choice == '5':
+            if role == 'exit':
+                break
+        elif choice == '5' or choice == 'exit':
             break
             
         if role == 'member':
             member_id = member_login()
+            if member_id == 'exit':
+                break
             if member_id != 0:
-                choice = member_menu()
-                if choice == '1':
-                    result = update_member(member_id)
-                elif choice == '2':
-                    result = update_fitness_goal(member_id)
-                elif choice == '3':
-                    result = update_health_metrics()
-                elif choice == '4':
-                    result = view_exercise_routines()
-                elif choice == '5':
-                    result = view_fitness_achievements()
-                elif choice == '6':
-                    result = log_daily_stats()
-                elif choice == '7':
-                    result = manage_schedule()
-                else:
-                    print("Invalid choice. Please try again.\n")
+                while choice != '9':
+                    choice = member_menu()
+                    if choice == '1':
+                        result = update_member(member_id)
+                    elif choice == '2':
+                        result = update_fitness_goal(member_id)
+                    elif choice == '3':
+                        result = update_health_metrics(member_id)
+                    elif choice == '4':
+                        result = view_exercise_routines(member_id)
+                    elif choice == '5':
+                        result = view_fitness_achievements(member_id)
+                    elif choice == '6':
+                        result = log_daily_stats(member_id)
+                    elif choice == '7':
+                        result = manage_schedule(member_id)
+                    elif choice == '8':
+                        result = pay_bill(member_id)
+                    else:
+                        print("Invalid choice. Please try again.\n")
 
         elif role == 'trainer':
             trainer_id = trainer_login()
+            if trainer_id == 'exit':
+                break
             if trainer_id != 0:
                 choice = trainer_menu()
                 if choice == '1':
@@ -88,16 +98,18 @@ def main():
 
         elif role == 'admin':
             admin_id = admin_login()
+            if admin_id == 'exit':
+                break
             if admin_login != 0:
                 choice = admin_menu()
                 if choice == '1':
                     result = room_management_menu()
                     if result == '1':
-                        x = make_class()
+                        result = display_rooms_and_bookings()
                     elif result == '2':
-                        x = remove_class()
+                        result = equipment_monitor()
                     elif result == '3':
-                        x = display_classes()
+                        result = class_scheduling()
                 elif choice == '2':
                     result = equipment_monitor()
                 elif choice == '3':

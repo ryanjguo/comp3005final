@@ -25,7 +25,7 @@ except Error as e:
 # Account creation
 def create_account():
     print("You chose to create a new account.")
-    choice = input("What kind of account would you like to create? (Member/Trainer/Admin): ")
+    choice = input("What kind of account would you like to create? (Member/Trainer/Admin/Exit): ")
 
     if choice.lower() == 'member':
         username = input("Choose your account name: ")
@@ -55,7 +55,7 @@ def create_account():
         create_admin(username, password, email, fullname, role)
 
     else:
-        print("Invalid choice. Please try again.")
+        choice = 'exit'
     
     return choice.lower()
 
@@ -115,11 +115,10 @@ def create_admin(username, password, email, fullname, role):
 
 def member_login():
     while True:
-        print("You chose option 1")
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
             print("Exiting login.")
-            return None
+            return 'exit'
 
         password = input("Enter your password: ")
 
@@ -140,11 +139,10 @@ def member_login():
 
 def trainer_login():
     while True:
-        print("You chose option 2")
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
             print("Exiting login.")
-            return None
+            return 'exit'
 
         password = input("Enter your password: ")
 
@@ -167,11 +165,10 @@ def trainer_login():
 
 def admin_login():
     while True:
-        print("You chose option 3")
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
             print("Exiting login.")
-            return None
+            return 'exit'
 
         password = input("Enter your password: ")
 

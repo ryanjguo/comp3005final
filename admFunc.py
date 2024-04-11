@@ -134,7 +134,37 @@ def make_class():
         print ("Sorry the trainer is not available at this time choose another time.")
 
 def billing():
-    pass
+    try:
+        member_id = input("Enter the member ID to pay: ")
+        cursor.execute(
+            "SELECT balance FROM members where member_id = %s",
+            (member_id,)
+        )
+        balance = cursor.fetchone()[0]
+
+        print(f"Current balance: ${balance}")
+
+        if balance <= 0:
+            print("No outstanding balance.")
+            return
+        else:
+            print(f"Outstanding balance: {balance}")
+            pay = input("Would you like to pay the balance? (y/n): ")
+
+            if pay.lower() == 'y':
+                cursor.execute(
+                    "UPDATE members SET balance = 0 WHERE member_id = %s",
+                    (member_id,)
+                )
+                connection.commit()
+                print("Payment successful.")
+            else:
+                print("Payment cancelled.")
+
+            return
+    except Error as e:
+        print(f"Error paying bill: {e}")
+        connection.rollback()
 
 def print_rooms():
     try:

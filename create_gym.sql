@@ -6,7 +6,7 @@ CREATE TABLE Members (
     full_name VARCHAR(100),
     date_of_birth DATE,
     gender VARCHAR(10),
-    bill INT
+    balance INT
 );
 
 CREATE TABLE Trainers (
@@ -39,7 +39,7 @@ CREATE TABLE FitnessGoals (
     goal_id SERIAL PRIMARY KEY,
     member_id INT,
     goal_name VARCHAR(100),
-    target_weight DECIMAL(5,2),
+    target_weight INT,
     target_time INT,
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
@@ -48,9 +48,9 @@ CREATE TABLE HealthMetrics (
     metric_id SERIAL PRIMARY KEY,
     member_id INT,
     metric_date DATE,
-    weight DECIMAL(5,2), 
+    weight INT,
     steps DECIMAL(5,2), 
-    calories DECIMAL(5,2),
+    calories INT,
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
 
