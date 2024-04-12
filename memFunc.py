@@ -359,6 +359,11 @@ def book_fitness_session(member_id):
             else:
                 continue
 
+        duration_hours = (end_time_obj.hour - start_time_obj.hour) + (end_time_obj.minute - start_time_obj.minute) / 60
+        # $15 an hour
+        price = (duration_hours * 15)
+        cursor.execute("UPDATE Members SET balance = balance + %s WHERE member_id = %s", (price, member_id))
+
         # If no conflicts, book the session
         cursor.execute(
             """
@@ -387,10 +392,12 @@ def sign_up(member_id):
         class_id = input("Enter the ID of the class you want to sign up for: ")
 
         cursor.execute(
-            "SELECT capacity FROM Classes WHERE class_id = %s",
+            "SELECT capacity, price FROM Classes WHERE class_id = %s",
             (class_id,)
         )
-        capacity = cursor.fetchone()[0]
+        class_data = cursor.fetchone()
+        capacity = class_data[0]
+        price = class_data[1]
 
         if capacity > 0:
             cursor.execute(
@@ -402,6 +409,12 @@ def sign_up(member_id):
             cursor.execute(
                 "UPDATE Classes SET capacity = capacity - 1 WHERE class_id = %s",
                 (class_id,)
+            )
+            connection.commit()
+
+            cursor.execute(
+                "UPDATE Members SET balance = balance + %s WHERE member_id = %s",
+                (price, member_id)
             )
             connection.commit()
 
