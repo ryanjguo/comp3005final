@@ -4,7 +4,7 @@ from psycopg2 import Error
 
 DB_NAME = "gym"
 DB_USER = "postgres"
-DB_PASSWORD = "RyanGuo3005"
+DB_PASSWORD = "660caa4e5c"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -80,12 +80,14 @@ def create_trainer(username, password, email, fullname):
         trainer_id = cursor.fetchone()[0]
         
         availability_slots = []
+        print("Enter your availablility")
         while True:
             day_of_week = input("Enter day of the week (e.g., Monday): ")
             start_time = input("Enter start time (HH:MM): ")
             end_time = input("Enter end time (HH:MM): ")
             availability_slots.append((trainer_id, day_of_week, start_time, end_time))
             another_slot = input("Do you want to add another availability slot? (yes/no): ").lower()
+            print()
             if another_slot != 'yes':
                 break
         
@@ -115,9 +117,10 @@ def create_admin(username, password, email, fullname, role):
 
 def member_login():
     while True:
+        print("MEMBER LOGIN")
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
-            print("Exiting login.\n")
+            print("Exiting Member login.")
             return 'exit'
 
         password = input("Enter your password: ")
@@ -139,9 +142,10 @@ def member_login():
 
 def trainer_login():
     while True:
+        print("TRAINER LOGIN")
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
-            print("Exiting login.")
+            print("Exiting Trainer login.")
             return 'exit'
 
         password = input("Enter your password: ")
@@ -165,9 +169,10 @@ def trainer_login():
 
 def admin_login():
     while True:
+        print("ADMIN LOGIN")
         username = input("Enter your username (type 'exit' to quit): ")
         if username.lower() == 'exit':
-            print("Exiting login.")
+            print("Exiting Admin login.")
             return 'exit'
 
         password = input("Enter your password: ")

@@ -10,7 +10,7 @@ from traFunc import *
 def display_classes():
     try:
         cursor.execute(
-            "SELECT class_id, class_name, trainer_id, room_id, start_time, end_time, capacity FROM Classes"
+            "SELECT class_id, class_name, trainer_id, room_id, day_of_week, start_time, end_time, capacity, price FROM Classes"
         )
         classes = cursor.fetchall()
 
@@ -18,15 +18,16 @@ def display_classes():
             print("No classes found.")
         else:
             print("Classes:")
-            print("--------------------------------------------------------------------------------------------")
-            print("| Class ID | Class Name               | Trainer ID | Room ID | Start Time | End Time | Capacity |")
-            print("--------------------------------------------------------------------------------------------")
+            print("---------------------------------------------------------------------------------------------------------------")
+            print("| Class ID | Class Name               | Trainer ID | Room ID | Day        | Start Time | End Time | Capacity | Price |")
+            print("---------------------------------------------------------------------------------------------------------------")
             for class_info in classes:
-                class_id, class_name, trainer_id, room_id, start_time, end_time, capacity = class_info
-                print(f"| {class_id:<9} | {class_name:<25} | {trainer_id:<10} | {room_id:<8} | {start_time.strftime('%H:%M %p'):<11} | {end_time.strftime('%H:%M %p'):<9} | {capacity:<8} |")
-            print("--------------------------------------------------------------------------------------------")
+                class_id, class_name, trainer_id, room_id, day_of_week, start_time, end_time, capacity, price = class_info
+                print(f"| {class_id:<9} | {class_name:<25} | {trainer_id:<10} | {room_id:<8} | {day_of_week:<10} | {start_time.strftime('%H:%M %p'):<11} | {end_time.strftime('%H:%M %p'):<9} | {capacity:<8} | {price:<6} |")
+            print("---------------------------------------------------------------------------------------------------------------")
     except Error as e:
         print(f"Error displaying classes: {e}")
+
 
 def equipment_monitor():
     try:
@@ -102,9 +103,11 @@ def equipment_monitor():
 def make_class():
     display_classes()
     trainer_id = input("Enter the trainer's ID: ")
+    if not trainer_exists(trainer_id):
+        print("Trainer with ID " + str(trainer_id) + " does not exist")
+        return    
 
     print_availability(trainer_id)
-    print("\n")
     print_rooms()
     
     room_id = input("\nEnter the room ID to schedule the class: ")
@@ -121,12 +124,12 @@ def make_class():
     duration_hours = (end_time.hour - start_time.hour) + (end_time.minute - start_time.minute) / 60
     # $5 per hour per month per year
     price = (duration_hours * 5) * 4 * 12
-    print(price)
 
     if is_trainer_available(trainer_id, day, start_time, end_time) > 0:
         if is_time_slot_available(trainer_id, room_id, day, start_time, end_time):
             capacity = input("Enter the class capacity: ")
-            insert_class(class_name, trainer_id, room_id, day, start_time, end_time, capacity, price)
+            exercise = input("Enter exercise routine: ")
+            insert_class(class_name, trainer_id, room_id, day, start_time, end_time, capacity, price, exercise)
             print("Class scheduled successfully!")
         else:
             print("Sorry, the requested time slot is already booked.")
@@ -183,14 +186,13 @@ def print_rooms():
     except Error as e:
         print(f"Error printing rooms: {e}")
 
-def insert_class(class_name, trainer_id, room_id, day, start_time, end_time, capacity, price):
+def insert_class(class_name, trainer_id, room_id, day, start_time, end_time, capacity, price, exercise):
     try:
         cursor.execute(
-            "INSERT INTO Classes (class_name, trainer_id, room_id, day_of_week, start_time, end_time, capacity, price) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-            (class_name, trainer_id, room_id, day, start_time, end_time, capacity, price)
+            "INSERT INTO Classes (class_name, trainer_id, room_id, day_of_week, start_time, end_time, capacity, price, exercise_routine) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (class_name, trainer_id, room_id, day, start_time, end_time, capacity, price, exercise)
         )
         connection.commit()
-        print("Class scheduled successfully")
     except Error as e:
         connection.rollback()
         print(f"Error scheduling class: {e}")
@@ -251,16 +253,30 @@ def class_schedule_updating():
         existing_class = cursor.fetchone()
 
         if existing_class:
+            class_name = None
+            trainer_id = None
+            trainer_id = None
+            room_id = None
+            day = None
+            start_time = None
+            end_time = None
+            capacity = None
+
             class_name = input("Enter the new class name (leave empty to skip): ").strip()
             trainer_id = input("Enter the new trainer ID (leave empty to skip): ").strip()
+            if trainer_id and not trainer_exists(trainer_id):
+                print("Trainer with ID " + str(trainer_id) + " does not exist")
+                return
             room_id = input("Enter the new room ID (leave empty to skip): ").strip()
+            day = input("Enter the new day of the week: ").strip()
             start_time = input("Enter the new start time (HH:MM AM/PM) (leave empty to skip): ").strip()
             end_time = input("Enter the new end time (HH:MM AM/PM) (leave empty to skip): ").strip()
 
-            if is_trainer_available(trainer_id, start_time, end_time) > 0:
-                capacity = input("Enter the new capacity (leave empty to skip): ").strip()
+            if is_trainer_available(trainer_id, day, start_time, end_time) <= 0:
+                print("Trainer is not available at the specified time. Exiting class update.")
+                return
             else:
-                exit
+                capacity = input("Enter the new capacity (leave empty to skip): ").strip()
 
             query = "UPDATE Classes SET"
             params = []
@@ -274,6 +290,9 @@ def class_schedule_updating():
             if room_id is not None:
                 query += " room_id = %s,"
                 params.append(room_id)
+            if day is not None:
+                query += " day_of_week = %s,"
+                params.append(day)
             if start_time is not None:
                 query += " start_time = %s,"
                 params.append(start_time)
@@ -296,23 +315,3 @@ def class_schedule_updating():
     except Error as e:
         connection.rollback()
         print(f"Error updating class information: {e}")
-
-def is_trainer_available(trainer_id, day_of_week, start_time, end_time):
-    try:
-        cursor.execute(
-            """
-            SELECT COUNT(*) FROM AvailabilitySlots
-            WHERE trainer_id = %s 
-            AND day_of_week = %s
-            AND start_time <= %s AND end_time >= %s
-            AND start_time <= %s AND end_time >= %s
-            """,
-            (trainer_id, day_of_week, end_time, start_time, start_time, end_time)
-        )
-        count = cursor.fetchone()[0]
-
-        return count > 0  # If count is greater than 0, trainer is available during the specified time range
-
-    except Error as e:
-        print(f"Database error: {e}")
-        return False

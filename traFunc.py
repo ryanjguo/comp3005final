@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2 import sql
 from psycopg2 import Error
+from datetime import timedelta
 
 from login import *
 
@@ -156,3 +157,37 @@ def print_availability(trainer_id):
 
     except Error as e:
         print(f"Error printing availability: {e}")
+
+def is_trainer_available(trainer_id, day_of_week, start_time, end_time):
+    try:
+        cursor.execute(
+            """
+            SELECT COUNT(*) FROM AvailabilitySlots
+            WHERE trainer_id = %s 
+            AND day_of_week = %s
+            AND start_time <= %s AND end_time >= %s
+            AND start_time <= %s AND end_time >= %s
+            """,
+            (trainer_id, day_of_week, end_time, start_time, start_time, end_time)
+        )
+        count = cursor.fetchone()[0]
+
+        return count > 0  # If count is greater than 0, trainer is available during the specified time range
+
+    except Error as e:
+        print(f"Database error: {e}")
+        return False
+
+def trainer_exists(trainer_id):
+    try:
+        cursor.execute(
+            "SELECT COUNT(*) FROM Trainers WHERE trainer_id = %s",
+            (trainer_id,)
+        )
+        count = cursor.fetchone()[0]
+
+        return count > 0
+
+    except Error as e:
+        print(f"Database error: {e}")
+        return False

@@ -64,7 +64,16 @@ CREATE TABLE Classes (
     end_time TIME,
     capacity INT,
     price INT,
+    exercise_routine VARCHAR(100),
     FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id)
+);
+
+CREATE TABLE ClassMembers (
+    class_member_id SERIAL PRIMARY KEY,
+    class_id INT,
+    member_id INT,
+    FOREIGN KEY (class_id) REFERENCES Classes(class_id),
+    FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
 
 CREATE TABLE Rooms (
@@ -88,4 +97,15 @@ CREATE TABLE Payments (
     payment_date DATE,
     payment_method VARCHAR(50),
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
+);
+
+CREATE TABLE PersonalFitnessSessions (
+    session_id SERIAL PRIMARY KEY,
+    member_id INT,
+    trainer_id INT,
+    day_of_week VARCHAR(20),
+    start_time TIME,
+    end_time TIME,
+    FOREIGN KEY (member_id) REFERENCES Members(member_id),
+    FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id)
 );

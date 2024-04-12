@@ -2,7 +2,10 @@ import psycopg2
 from psycopg2 import sql
 from psycopg2 import Error
 import math
+from datetime import datetime
 from login import *
+from traFunc import trainer_exists
+from admFunc import display_classes
 
 def update_member(member_id, **kwargs):
     # Prompt user to select the field to update
@@ -126,21 +129,20 @@ def update_health_metrics(member_id):
         print(f"Error updating health metrics: {e}")
         connection.rollback()
 
-
 def view_exercise_routines(member_id):
     try:
         cursor.execute(
-            "SELECT * FROM exerciseroutines WHERE member_id = %s",
+            "SELECT class_name, exercise_routine FROM Classes WHERE trainer_id = %s",
             (member_id,)
         )
         routines = cursor.fetchall()
         
-        if not(routines):
+        if not routines:
             print("No exercise routines found.")
         else:
             print("\nExercise Routines:")
-            for routine in routines:
-                print(routine)
+            for class_name, exercise_routine in routines:
+                print(f"Class: {class_name}, Exercise Routine: {exercise_routine}")
         
     except Error as e:
         print(f"Error viewing exercise routines: {e}")
@@ -269,3 +271,198 @@ def pay_bill(member_id):
     except Error as e:
         print(f"Error paying bill: {e}")
         connection.rollback()
+
+def book_fitness_session(member_id):
+    trainer_id = input("Enter the ID of the trainer you would like to book with: ")
+    if not trainer_exists(trainer_id):
+        print("Trainer with ID " + str(trainer_id) + " does not exist")
+        return
+
+    try:
+        cursor.execute(
+            """
+            SELECT day_of_week, start_time, end_time 
+            FROM AvailabilitySlots 
+            WHERE trainer_id = %s
+            """,
+            (trainer_id,)
+        )
+        availability_slots = cursor.fetchall()
+
+        cursor.execute(
+            """
+            SELECT day_of_week, start_time, end_time 
+            FROM Classes 
+            WHERE trainer_id = %s
+            """,
+            (trainer_id,)
+        )
+        class_slots = cursor.fetchall()
+
+        cursor.execute(
+            """
+            SELECT day_of_week, start_time, end_time 
+            FROM PersonalFitnessSessions 
+            WHERE trainer_id = %s
+            """,
+            (trainer_id,)
+        )
+        personal_slots = cursor.fetchall()
+
+        merged_slots = availability_slots + class_slots + personal_slots
+
+        print("Available Times for Trainer:")
+        availability = {day: [] for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}
+
+        for day, start_time, end_time in merged_slots:
+            slot_range = (start_time, end_time)
+            if slot_range not in availability[day]:
+                availability[day].append(slot_range)
+
+        for day, slots in availability.items():
+            print(day + ":")
+            if not slots:
+                print("No available slots")
+            else:
+                available_slots = []
+                for slot in slots:
+                    if not available_slots:
+                        available_slots.append(slot)
+                    else:
+                        for available_slot in available_slots[:]:
+                            if slot[0] < available_slot[1] and slot[1] > available_slot[0]:
+                                available_slots.remove(available_slot)
+                                if available_slot[0] < slot[0]:
+                                    available_slots.append((available_slot[0], slot[0]))
+                                if available_slot[1] > slot[1]:
+                                    available_slots.append((slot[1], available_slot[1]))
+                            else:
+                                available_slots.append(slot)
+
+                for start_time, end_time in available_slots:
+                    print(f"{start_time.strftime('%H:%M')} - {end_time.strftime('%H:%M')}")
+
+        day = input("Enter the day of the week you would like your session: ").strip()
+        start_time = input("What time do you want to start your fitness session (HH:MM AM/PM): ").strip()
+        end_time = input("What time do you want to end your fitness session (HH:MM AM/PM): ").strip()
+        
+        # Convert input time strings to time objects
+        start_time_obj = datetime.strptime(start_time, '%I:%M %p').time()
+        end_time_obj = datetime.strptime(end_time, '%I:%M %p').time()
+
+        slots = availability[day]
+
+        for slot_start_time, slot_end_time in slots[1:]:
+            if start_time_obj >= slot_start_time and end_time_obj <= slot_end_time:
+                print("The selected time conflicts with an existing booking. Please choose another time.")
+                return
+            else:
+                continue
+
+        # If no conflicts, book the session
+        cursor.execute(
+            """
+            INSERT INTO PersonalFitnessSessions (member_id, trainer_id, day_of_week, start_time, end_time)
+            VALUES (%s, %s, %s, %s, %s)
+            """,
+            (member_id, trainer_id, day, start_time_obj, end_time_obj)
+        )
+        connection.commit()
+        
+        
+        print("Session booked successfully!")
+        print("You have been scheduled in:")
+        print("Day: " + day)
+        print("Start Time: " + start_time)
+        print("End Time: " + end_time)
+        
+    except Error as e:
+        print(f"Database error: {e}")
+
+    
+def sign_up(member_id):
+    try:
+        display_classes()
+
+        class_id = input("Enter the ID of the class you want to sign up for: ")
+
+        cursor.execute(
+            "SELECT capacity FROM Classes WHERE class_id = %s",
+            (class_id,)
+        )
+        capacity = cursor.fetchone()[0]
+
+        if capacity > 0:
+            cursor.execute(
+                "INSERT INTO ClassMembers (class_id, member_id) VALUES (%s, %s)",
+                (class_id, member_id)
+            )
+            connection.commit()
+
+            cursor.execute(
+                "UPDATE Classes SET capacity = capacity - 1 WHERE class_id = %s",
+                (class_id,)
+            )
+            connection.commit()
+
+            print("You have successfully signed up for the class!")
+        else:
+            print("Sorry, there are no available slots for this class.")
+
+    except Error as e:
+        connection.rollback()
+        print(f"Error signing up for the class: {e}")
+
+def view_classes(member_id):
+    try:
+        # Query to fetch classes for the given member
+        cursor.execute(
+            """
+            SELECT c.class_id, c.class_name, c.trainer_id, c.room_id, c.day_of_week, c.start_time, c.end_time
+            FROM Classes c
+            JOIN ClassMembers cm ON c.class_id = cm.class_id
+            WHERE cm.member_id = %s
+            """,
+            (member_id,)
+        )
+        classes = cursor.fetchall()
+
+        if not classes:
+            print("No classes found for this member.")
+        else:
+            print("Classes for Member:")
+            print("-------------------------------------------------------------------------------------------")
+            print("| Class ID | Class Name               | Trainer ID | Room ID | Day        | Time             |")
+            print("-------------------------------------------------------------------------------------------")
+            for class_info in classes:
+                class_id, class_name, trainer_id, room_id, day_of_week, start_time, end_time = class_info
+                print(f"| {class_id:<9} | {class_name:<25} | {trainer_id:<10} | {room_id:<8} | {day_of_week:<10} | {start_time.strftime('%H:%M')} - {end_time.strftime('%H:%M')} |")
+            print("-------------------------------------------------------------------------------------------")
+    except Error as e:
+        print(f"Error displaying classes: {e}")
+
+def view_personal_fitness_sessions(member_id):
+    try:
+        cursor.execute(
+            """
+            SELECT pfs.session_id, pfs.trainer_id, pfs.day_of_week, pfs.start_time, pfs.end_time
+            FROM personalfitnesssessions pfs
+            WHERE pfs.member_id = %s
+            """,
+            (member_id,)
+        )
+        sessions = cursor.fetchall()
+
+        if not sessions:
+            print("No personal fitness sessions found for this member.")
+        else:
+            print("Personal Fitness Sessions for Member:")
+            print("-------------------------------------------------------------------------------------------")
+            print("| Session ID | Trainer ID | Day        | Time             |")
+            print("-------------------------------------------------------------------------------------------")
+            for session_info in sessions:
+                session_id, trainer_id, day_of_week, start_time, end_time = session_info
+                print(f"| {session_id:<11} | {trainer_id:<11} | {day_of_week:<10} | {start_time.strftime('%H:%M')} - {end_time.strftime('%H:%M')} |")
+            print("-------------------------------------------------------------------------------------------")
+    except Error as e:
+        print(f"Error displaying personal fitness sessions: {e}")
