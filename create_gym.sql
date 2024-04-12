@@ -51,6 +51,7 @@ CREATE TABLE HealthMetrics (
     weight INT,
     steps INT, 
     calories INT,
+    height INT,
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
 
