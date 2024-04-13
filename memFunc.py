@@ -383,7 +383,46 @@ def book_fitness_session(member_id):
     except Error as e:
         print(f"Database error: {e}")
 
-    
+def cancel_personal_fitness_session(member_id):
+    try:
+        cursor.execute(
+            """
+            SELECT session_id, trainer_id, day_of_week, start_time, end_time
+            FROM PersonalFitnessSessions
+            WHERE member_id = %s
+            """,
+            (member_id,)
+        )
+        sessions = cursor.fetchall()
+
+        if sessions:
+            print("Your booked sessions:")
+            for session_id, trainer_id, day_of_week, start_time, end_time in sessions:
+                print(f"Session ID: {session_id}, Trainer ID: {trainer_id}, Day: {day_of_week}, Start Time: {start_time}, End Time: {end_time}")
+
+            session_to_cancel = input("Enter the ID of the session you want to cancel: ")
+
+            for session_id, _, _, _, _ in sessions:
+                if session_to_cancel == str(session_id):
+                    cursor.execute(
+                        """
+                        DELETE FROM PersonalFitnessSessions
+                        WHERE session_id = %s
+                        """,
+                        (session_to_cancel,)
+                    )
+                    connection.commit()
+                    
+                    print("Session cancellation successful!")
+                    return
+
+            print("Invalid session ID. Please enter a valid session ID.")
+        else:
+            print("You don't have any booked sessions.")
+
+    except Error as e:
+        print(f"Database error: {e}")
+
 def sign_up(member_id):
     try:
         display_classes()
@@ -424,6 +463,54 @@ def sign_up(member_id):
     except Error as e:
         connection.rollback()
         print(f"Error signing up for the class: {e}")
+
+def cancel_class(member_id):
+    view_classes()
+    try:
+        cursor.execute(
+            "SELECT class_id FROM ClassMembers WHERE member_id = %s",
+            (member_id,)
+        )
+        class_ids = cursor.fetchall()
+
+        if class_ids:
+            class_id_to_cancel = input("Enter the ID of the class you want to cancel: ")
+
+            if (class_id_to_cancel,) in class_ids:
+                cursor.execute(
+                    "DELETE FROM ClassMembers WHERE member_id = %s AND class_id = %s",
+                    (member_id, class_id_to_cancel)
+                )
+                connection.commit()
+
+                cursor.execute(
+                    "UPDATE Classes SET capacity = capacity + 1 WHERE class_id = %s",
+                    (class_id_to_cancel,)
+                )
+                connection.commit()
+
+                cursor.execute(
+                    "SELECT price FROM Classes WHERE class_id = %s",
+                    (class_id_to_cancel,)
+                )
+                price = cursor.fetchone()[0]
+
+                cursor.execute(
+                    "UPDATE Members SET balance = balance - %s WHERE member_id = %s",
+                    (price, member_id)
+                )
+                connection.commit()
+
+                print("Class cancellation successful!")
+            else:
+                print("You are not signed up for this class.")
+        else:
+            print("You are not signed up for any classes.")
+
+    except Error as e:
+        connection.rollback()
+        print(f"Error canceling class: {e}")
+
 
 def view_classes(member_id):
     try:
@@ -478,3 +565,7 @@ def view_personal_fitness_sessions(member_id):
             print("-------------------------------------------------------------------------------------------")
     except Error as e:
         print(f"Error displaying personal fitness sessions: {e}")
+
+def reschedule_personal_fitness_session(member_id):
+    cancel_personal_fitness_session(member_id)
+    book_fitness_session(member_id)

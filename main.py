@@ -87,6 +87,12 @@ def main():
                                 x = view_classes(member_id)
                                 y = view_personal_fitness_sessions(member_id)
                             elif result == '4':
+                                x = cancel_class(member_id)
+                            elif result == '5':
+                                x = cancel_personal_fitness_session(member_id)
+                            elif result == '6':
+                                x = reschedule_personal_fitness_session(member_id)
+                            elif result == '7':
                                 continue
                         elif choice == '8':
                             result = pay_bill(member_id)

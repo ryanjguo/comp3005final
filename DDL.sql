@@ -35,7 +35,7 @@ CREATE TABLE AdminStaff (
     username VARCHAR(50) UNIQUE,
     password VARCHAR(50), 
     email VARCHAR(100),
-    full_name VARCHAR(100),
+    full_name VARCHAR(100)
 );
 
 CREATE TABLE FitnessGoals (
@@ -56,6 +56,11 @@ CREATE TABLE HealthMetrics (
     calories INT,
     height INT,
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
+);
+
+CREATE TABLE Rooms (
+    room_id SERIAL PRIMARY KEY,
+    room_name VARCHAR(100)
 );
 
 CREATE TABLE Classes (
@@ -79,11 +84,6 @@ CREATE TABLE ClassMembers (
     member_id INT,
     FOREIGN KEY (class_id) REFERENCES Classes(class_id),
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
-);
-
-CREATE TABLE Rooms (
-    room_id SERIAL PRIMARY KEY,
-    room_name VARCHAR(100),
 );
 
 CREATE TABLE Equipment (

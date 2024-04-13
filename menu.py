@@ -66,7 +66,10 @@ def manage_schedule_menu():
     print("1. Book a personal fitness session")
     print("2. Sign up for a class")
     print("3. View Classes you are in")
-    print("4. Exit")
+    print("4. Cancel a class")
+    print("5. Cancel a personal fitness session")
+    print("6. Reschedule a personal fitness session")
+    print("7. Exit")
 
     choice = input("Enter your choice (#): ")
     return choice
