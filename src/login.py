@@ -4,7 +4,7 @@ from psycopg2 import Error
 
 DB_NAME = "gym"
 DB_USER = "postgres"
-DB_PASSWORD = "660caa4e5c"
+DB_PASSWORD = "RyanGuo3005"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 

@@ -140,7 +140,7 @@ def make_class():
 def billing():
     try:
         cursor.execute(
-            "SELECT * FROM Billing WHERE payment_status = 'PENDING'"
+            "SELECT * FROM Payments WHERE payment_status = 'PENDING'"
         )
         bills = cursor.fetchall()
 
@@ -157,7 +157,7 @@ def billing():
 
         if to_pay.lower() == 'yes':
             cursor.execute(
-                "UPDATE Billing SET payment_status = 'COMPLETE' WHERE bill_id = %s",
+                "UPDATE Payments SET payment_status = 'COMPLETE' WHERE payment_id = %s",
                 (bill_id,)
             )
             cursor.execute(
@@ -168,7 +168,7 @@ def billing():
             print("Bill paid successfully.")
         else:
             cursor.execute(
-                "UPDATE Billing SET payment_status = 'REJECTED' WHERE bill_id = %s",
+                "UPDATE Payments SET payment_status = 'REJECTED' WHERE payment_id = %s",
                 (bill_id,)
             )
             connection.commit()
