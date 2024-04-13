@@ -3,7 +3,7 @@ from psycopg2 import sql
 from psycopg2 import Error
 from datetime import timedelta
 
-from login import *
+from src.login import *
 
 def update_trainer(trainer_id, **kwargs):
     try:
