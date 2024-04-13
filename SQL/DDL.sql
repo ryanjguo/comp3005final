@@ -97,9 +97,9 @@ CREATE TABLE Equipment (
 CREATE TABLE Payments (
     payment_id SERIAL PRIMARY KEY,
     member_id INT,
-    amount DECIMAL(10,2),
+    amount INT,
     payment_date DATE,
-    payment_method VARCHAR(50),
+    payment_status VARCHAR(20),
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
 

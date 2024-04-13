@@ -3,9 +3,9 @@ from psycopg2 import sql
 from psycopg2 import Error
 import math
 from datetime import datetime
-from login import *
-from traFunc import trainer_exists
-from admFunc import display_classes
+from src.login import *
+from src.traFunc import trainer_exists
+from src.admFunc import display_classes
 
 def update_member(member_id, **kwargs):
     # Prompt user to select the field to update
@@ -258,11 +258,11 @@ def pay_bill(member_id):
 
             if pay.lower() == 'y':
                 cursor.execute(
-                    "UPDATE members SET balance = 0 WHERE member_id = %s",
-                    (member_id,)
+                    "INSERT INTO Payments (member_id, payment_date, amount) VALUES (%s, CURRENT_DATE, %s)",
+                    (member_id, balance)
                 )
                 connection.commit()
-                print("Payment successful.")
+                print("Payment now pending. Admin staff will process it shortly.")
             else:
                 print("Payment cancelled.")
 

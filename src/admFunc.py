@@ -139,33 +139,43 @@ def make_class():
 
 def billing():
     try:
-        member_id = input("Enter the member ID to pay: ")
         cursor.execute(
-            "SELECT balance FROM members where member_id = %s",
-            (member_id,)
+            "SELECT * FROM Billing WHERE payment_status = 'PENDING'"
         )
-        balance = cursor.fetchone()[0]
+        bills = cursor.fetchall()
 
-        print(f"Current balance: ${balance}")
-
-        if balance <= 0:
-            print("No outstanding balance.")
-            return
+        if bills:
+            print("Bills:")
+            for bill in bills:
+                print(f"Bill ID: {bill[0]}, Member ID: {bill[1]}, Amount: {bill[2]}")
         else:
-            print(f"Outstanding balance: {balance}")
-            pay = input("Would you like to pay the balance? (y/n): ")
-
-            if pay.lower() == 'y':
-                cursor.execute(
-                    "UPDATE members SET balance = 0 WHERE member_id = %s",
-                    (member_id,)
-                )
-                connection.commit()
-                print("Payment successful.")
-            else:
-                print("Payment cancelled.")
-
+            print("No pending bills found.")
             return
+
+        bill_id = input("Enter the bill ID to pay: ")
+        to_pay = input("Would you like to accept this bill payment? (yes/no): ")
+
+        if to_pay.lower() == 'yes':
+            cursor.execute(
+                "UPDATE Billing SET payment_status = 'COMPLETE' WHERE bill_id = %s",
+                (bill_id,)
+            )
+            cursor.execute(
+                "UPDATE members SET balance = 0 WHERE member_id = %s",
+                (bill[1],)
+            )
+            connection.commit()
+            print("Bill paid successfully.")
+        else:
+            cursor.execute(
+                "UPDATE Billing SET payment_status = 'REJECTED' WHERE bill_id = %s",
+                (bill_id,)
+            )
+            connection.commit()
+            print("Bill rejected.")
+
+        return
+    
     except Error as e:
         print(f"Error paying bill: {e}")
         connection.rollback()
