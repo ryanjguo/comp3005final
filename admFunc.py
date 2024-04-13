@@ -16,6 +16,7 @@ def display_classes():
 
         if not classes:
             print("No classes found.")
+            return False
         else:
             print("Classes:")
             print("---------------------------------------------------------------------------------------------------------------")
@@ -179,7 +180,7 @@ def print_rooms():
         if rooms:
             print("Rooms:")
             for room in rooms:
-                print(f"Room ID: {room[0]}, Room Name: {room[1]}, Capacity: {room[2]}")
+                print(f"Room ID: {room[0]}, Room Name: {room[1]}")
         else:
             print("No rooms found.")
 
@@ -214,7 +215,8 @@ def is_time_slot_available(trainer_id, room_id, day, start_time, end_time):
         return False
 
 def remove_class():
-    display_classes()
+    if display_classes() == False:
+        return
     print('\n')
     print_rooms()
 

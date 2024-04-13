@@ -50,9 +50,8 @@ def create_account():
         password = input("Choose your password: ")
         email = input("Enter your email: ")
         fullname = input("Enter your full name: ")
-        role = input("Enter your role: ")
 
-        create_admin(username, password, email, fullname, role)
+        create_admin(username, password, email, fullname)
 
     else:
         choice = 'exit'
@@ -66,7 +65,7 @@ def create_member(username, password, email, fullname, dob, gender):
             (username, password, email, fullname, dob, gender)
         )
         connection.commit()
-        print("Member created successfully")
+        print("Member created successfully\n")
     except Error as e:
         connection.rollback() 
         print(f"Error creating member: {e}")
@@ -98,19 +97,19 @@ def create_trainer(username, password, email, fullname):
             )
         
         connection.commit()
-        print("Trainer and availability slots created successfully")
+        print("Trainer and availability slots created successfully\n")
     except Error as e:
         connection.rollback()
         print(f"Error creating trainer and availability slots: {e}")
 
-def create_admin(username, password, email, fullname, role):
+def create_admin(username, password, email, fullname):
     try:
         cursor.execute(
-            sql.SQL("INSERT INTO adminstaff (username, password, email, full_name, role) VALUES (%s, %s, %s, %s, %s)"),
-            (username, password, email, fullname, role)
+            sql.SQL("INSERT INTO adminstaff (username, password, email, full_name) VALUES (%s, %s, %s, %s, %s)"),
+            (username, password, email, fullname)
         )
         connection.commit()
-        print("Admin created successfully")
+        print("Admin created successfully\n")
     except Error as e:
         connection.rollback() 
         print(f"Error creating admin: {e}")

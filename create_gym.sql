@@ -32,7 +32,6 @@ CREATE TABLE AdminStaff (
     password VARCHAR(50), 
     email VARCHAR(100),
     full_name VARCHAR(100),
-    role VARCHAR(100)
 );
 
 CREATE TABLE FitnessGoals (
@@ -80,7 +79,7 @@ CREATE TABLE ClassMembers (
 CREATE TABLE Rooms (
     room_id SERIAL PRIMARY KEY,
     room_name VARCHAR(100),
-    capacity INT
+
 );
 
 CREATE TABLE Equipment (

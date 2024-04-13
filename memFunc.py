@@ -374,7 +374,6 @@ def book_fitness_session(member_id):
         )
         connection.commit()
         
-        
         print("Session booked successfully!")
         print("You have been scheduled in:")
         print("Day: " + day)
