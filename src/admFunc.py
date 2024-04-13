@@ -3,9 +3,9 @@ from psycopg2 import sql
 from psycopg2 import Error
 
 from datetime import datetime, timedelta
-from login import *
-from menu import *
-from traFunc import *
+from src.login import *
+from src.menu import *
+from src.traFunc import *
 
 def display_classes():
     try:

@@ -351,7 +351,7 @@ def book_fitness_session(member_id):
         end_time_obj = datetime.strptime(end_time, '%I:%M %p').time()
 
         slots = availability[day]
-
+        print(slots)
         for slot_start_time, slot_end_time in slots[1:]:
             if start_time_obj >= slot_start_time and end_time_obj <= slot_end_time:
                 print("The selected time conflicts with an existing booking. Please choose another time.")

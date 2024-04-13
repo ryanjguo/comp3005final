@@ -1,8 +1,8 @@
-from login import *
-from menu import *
-from memFunc import *
-from traFunc import *
-from admFunc import *
+from src.login import *
+from src.menu import *
+from src.memFunc import *
+from src.traFunc import *
+from src.admFunc import *
 
 banner = """
  _______  ___   _______    _______  ______    _______  _______  __   __  _______  ______    _______ 
