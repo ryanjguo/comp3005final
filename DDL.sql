@@ -1,3 +1,7 @@
+-- COMP 3005 Final Project
+-- DDL File to create the database schema
+-- Matthew Seto, Ryan Guo
+
 CREATE TABLE Members (
     member_id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE,
@@ -65,6 +69,7 @@ CREATE TABLE Classes (
     capacity INT,
     price INT,
     exercise_routine VARCHAR(100),
+    FOREIGN KEY (room_id) REFERENCES Rooms(room_id),
     FOREIGN KEY (trainer_id) REFERENCES Trainers(trainer_id)
 );
 
@@ -79,7 +84,6 @@ CREATE TABLE ClassMembers (
 CREATE TABLE Rooms (
     room_id SERIAL PRIMARY KEY,
     room_name VARCHAR(100),
-
 );
 
 CREATE TABLE Equipment (
