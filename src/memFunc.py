@@ -351,7 +351,6 @@ def book_fitness_session(member_id):
         end_time_obj = datetime.strptime(end_time, '%I:%M %p').time()
 
         slots = availability[day]
-        print(slots)
         for slot_start_time, slot_end_time in slots[1:]:
             if start_time_obj >= slot_start_time and end_time_obj <= slot_end_time:
                 print("The selected time conflicts with an existing booking. Please choose another time.")
@@ -414,7 +413,7 @@ def cancel_personal_fitness_session(member_id):
                     connection.commit()
                     
                     print("Session cancellation successful!")
-                    return
+                    return True
 
             print("Invalid session ID. Please enter a valid session ID.")
         else:
@@ -465,7 +464,7 @@ def sign_up(member_id):
         print(f"Error signing up for the class: {e}")
 
 def cancel_class(member_id):
-    view_classes()
+    view_classes(member_id)
     try:
         cursor.execute(
             "SELECT class_id FROM ClassMembers WHERE member_id = %s",
@@ -567,5 +566,5 @@ def view_personal_fitness_sessions(member_id):
         print(f"Error displaying personal fitness sessions: {e}")
 
 def reschedule_personal_fitness_session(member_id):
-    cancel_personal_fitness_session(member_id)
-    book_fitness_session(member_id)
+    if cancel_personal_fitness_session(member_id):
+        book_fitness_session(member_id)

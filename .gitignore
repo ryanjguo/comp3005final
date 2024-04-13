@@ -9,3 +9,4 @@ __pycache__/menu.cpython-312.pyc
 __pycache__/memFunc.cpython-312.pyc
 __pycache__/login.cpython-312.pyc
 __pycache__/admFunc.cpython-312.pyc
+*.pyc

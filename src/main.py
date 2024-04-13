@@ -1,8 +1,8 @@
-from src.login import *
-from src.menu import *
-from src.memFunc import *
-from src.traFunc import *
-from src.admFunc import *
+from login import *
+from menu import *
+from memFunc import *
+from traFunc import *
+from admFunc import *
 
 banner = """
  _______  ___   _______    _______  ______    _______  _______  __   __  _______  ______    _______ 
@@ -78,22 +78,22 @@ def main():
                         elif choice == '6':
                             result = log_daily_stats(member_id)
                         elif choice == '7':
-                            result = manage_schedule_menu()
-                            if result == '1':
-                                x = book_fitness_session(member_id)
-                            elif result == '2':
-                                x = sign_up(member_id)
-                            elif result == '3':
-                                x = view_classes(member_id)
-                                y = view_personal_fitness_sessions(member_id)
-                            elif result == '4':
-                                x = cancel_class(member_id)
-                            elif result == '5':
-                                x = cancel_personal_fitness_session(member_id)
-                            elif result == '6':
-                                x = reschedule_personal_fitness_session(member_id)
-                            elif result == '7':
-                                continue
+                            result = 0
+                            while result != '7':
+                                result = manage_schedule_menu()
+                                if result == '1':
+                                    x = book_fitness_session(member_id)
+                                elif result == '2':
+                                    x = sign_up(member_id)
+                                elif result == '3':
+                                    x = view_classes(member_id)
+                                    y = view_personal_fitness_sessions(member_id)
+                                elif result == '4':
+                                    x = cancel_class(member_id)
+                                elif result == '5':
+                                    x = cancel_personal_fitness_session(member_id)
+                                elif result == '6':
+                                    x = reschedule_personal_fitness_session(member_id)
                         elif choice == '8':
                             result = pay_bill(member_id)
                         elif choice == '9':
