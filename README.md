@@ -1,14 +1,12 @@
-# COMP 3005 - Final Project
+# COMP 3005 Final Project - Big Brothers Gym Management System 🏋️‍♂️
 ### Ryan Guo, Matthew Seto 
 ###### Professor Abdelghny Orogat
 ###### April 13, 2024
-
-## Big Brothers Gym Management System 🏋️‍♂️
 Welcome to our gym management system. This is an all-inclusive management system for members, trainers, and admins alike.   
 All users can create/login to their accounts, and manage their profile and personal information. They also have acess to their own dashboard,
 where they can see information about their past workouts, billing, and log their daily statistics to see their progress over time.
 
-### Dependencies
+### Modules
 psycopg2  
 datetime  
 
