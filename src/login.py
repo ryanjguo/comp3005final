@@ -61,7 +61,7 @@ def create_account():
 def create_member(username, password, email, fullname, dob, gender):
     try:
         cursor.execute(
-            sql.SQL("INSERT INTO members (username, password, email, full_name, date_of_birth, gender) VALUES (%s, %s, %s, %s, %s, %s)"),
+            sql.SQL("INSERT INTO members (username, password, email, full_name, date_of_birth, gender, balance) VALUES (%s, %s, %s, %s, %s, %s, 0)"),
             (username, password, email, fullname, dob, gender)
         )
         connection.commit()
