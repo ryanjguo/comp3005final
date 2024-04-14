@@ -121,9 +121,7 @@ def make_class():
     start_time = datetime.strptime(start_time_str, "%I:%M %p").time()
     end_time = datetime.strptime(end_time_str, "%I:%M %p").time()
 
-    # duration of the class in hours the price will be calculated based on how long the class is
     duration_hours = (end_time.hour - start_time.hour) + (end_time.minute - start_time.minute) / 60
-    # $5 per hour per month per year
     price = (duration_hours * 5) * 4 * 12
 
     if is_trainer_available(trainer_id, day, start_time, end_time) > 0:
