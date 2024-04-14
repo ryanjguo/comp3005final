@@ -477,7 +477,6 @@ def cancel_class(member_id):
             (member_id,)
         )
         class_ids = [row[0] for row in cursor.fetchall()] 
-        print(class_ids)
 
         if class_ids:
             class_id_to_cancel = int(input("Enter the ID of the class you want to cancel: "))
