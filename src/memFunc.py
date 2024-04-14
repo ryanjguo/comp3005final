@@ -203,6 +203,25 @@ def view_fitness_achievements(member_id):
         )
         avg_calories = cursor.fetchone()[0]
 
+        if min_weight is None:
+            min_weight = 0
+        if max_weight is None:
+            max_weight = 0
+        if avg_weight is None:
+            avg_weight = 0
+        if min_steps is None:
+            min_steps = 0
+        if max_steps is None:
+            max_steps = 0
+        if avg_steps is None:
+            avg_steps = 0
+        if min_calories is None:
+            min_calories = 0
+        if max_calories is None:
+            max_calories = 0
+        if avg_calories is None:
+            avg_calories = 0
+        
         print("\nFitness Achievements and Statistics:")
         print(f"Weight: Min - {min_weight}, Max - {max_weight}, Avg - {math.floor(avg_weight)}")
         print(f"Steps: Min - {min_steps}, Max - {max_steps}, Avg - {math.floor(avg_steps)}")
