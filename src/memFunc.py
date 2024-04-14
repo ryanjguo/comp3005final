@@ -1,5 +1,3 @@
-import psycopg2
-from psycopg2 import sql
 from psycopg2 import Error
 import math
 from datetime import datetime
@@ -8,7 +6,6 @@ from traFunc import trainer_exists
 from admFunc import display_classes
 
 def update_member(member_id, **kwargs):
-    # Prompt user to select the field to update
     try:
         print("\nWhich field do you want to update?")
         print("1. Username")
@@ -19,7 +16,6 @@ def update_member(member_id, **kwargs):
         print("6. Gender")
         choice = int(input("Enter the number corresponding to the field you want to update: "))
         
-        # Map user choice to column name
         columns = {
             1: "username",
             2: "password",
@@ -29,7 +25,6 @@ def update_member(member_id, **kwargs):
             6: "gender"
         }
         
-        # Validate user choice
         if choice not in columns:
             print("Invalid choice!")
             return
@@ -56,7 +51,6 @@ def update_fitness_goal(member_id):
         )
         goal_row = cursor.fetchone()
         if goal_row is None:
-            # No goal found, insert new fitness goal
             print("\nYou have not set a goal yet.")
             new_goal_name = input("Goal Name: ")
             new_target_weight = input("Target Weight (KG): ")
@@ -71,13 +65,11 @@ def update_fitness_goal(member_id):
             new_goal_name = input("New Goal Name: ")
             new_target_weight = input("New Target Weight (KG): ")
             new_target_time = input("New Target Time (weeks): ")
-            # Update existing fitness goal
             cursor.execute(
                 "UPDATE fitnessgoals SET goal_name = %s, target_weight = %s, target_time = %s WHERE member_id = %s",
                 (new_goal_name, new_target_weight, new_target_time, member_id)
             )
         
-        # Commit the transaction
         connection.commit()
         
         print("Update successful")
@@ -110,15 +102,13 @@ def update_health_metrics(member_id):
         existing_metric = cursor.fetchone()
         
         if not existing_metric:
-            # No health metrics exist for this user yet, create new ones
             print("\nNo health metrics found for this user. Creating new ones.")
             cursor.execute(
                 "INSERT INTO healthmetrics (member_id, metric_date, weight, height) VALUES (%s, CURRENT_DATE, NULL, NULL)",
                 (member_id,)
             )
             connection.commit()
-        
-        # Update the selected health metric
+
         query_update = f"UPDATE healthmetrics SET {column_name} = %s WHERE member_id = %s"
         cursor.execute(query_update, (new_value, member_id))
         connection.commit()
@@ -346,7 +336,6 @@ def book_fitness_session(member_id):
         start_time = input("What time do you want to start your fitness session (HH:MM AM/PM): ").strip()
         end_time = input("What time do you want to end your fitness session (HH:MM AM/PM): ").strip()
         
-        # Convert input time strings to time objects
         start_time_obj = datetime.strptime(start_time, '%I:%M %p').time()
         end_time_obj = datetime.strptime(end_time, '%I:%M %p').time()
 
@@ -359,11 +348,9 @@ def book_fitness_session(member_id):
                 continue
 
         duration_hours = (end_time_obj.hour - start_time_obj.hour) + (end_time_obj.minute - start_time_obj.minute) / 60
-        # $15 an hour
         price = (duration_hours * 15)
         cursor.execute("UPDATE Members SET balance = balance + %s WHERE member_id = %s", (price, member_id))
 
-        # If no conflicts, book the session
         cursor.execute(
             """
             INSERT INTO PersonalFitnessSessions (member_id, trainer_id, day_of_week, start_time, end_time)
@@ -513,7 +500,6 @@ def cancel_class(member_id):
 
 def view_classes(member_id):
     try:
-        # Query to fetch classes for the given member
         cursor.execute(
             """
             SELECT c.class_id, c.class_name, c.trainer_id, c.room_id, c.day_of_week, c.start_time, c.end_time
