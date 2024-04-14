@@ -122,7 +122,7 @@ def update_health_metrics(member_id):
 def view_exercise_routines(member_id):
     try:
         cursor.execute(
-            "SELECT class_name, exercise_routine FROM Classes WHERE trainer_id = %s",
+            "SELECT c.class_name, c.exercise_routine FROM Classes c INNER JOIN ClassMembers cm ON c.class_id = cm.class_id WHERE cm.member_id = %s",
             (member_id,)
         )
         routines = cursor.fetchall()
@@ -457,12 +457,13 @@ def cancel_class(member_id):
             "SELECT class_id FROM ClassMembers WHERE member_id = %s",
             (member_id,)
         )
-        class_ids = cursor.fetchall()
+        class_ids = [row[0] for row in cursor.fetchall()] 
+        print(class_ids)
 
         if class_ids:
-            class_id_to_cancel = input("Enter the ID of the class you want to cancel: ")
+            class_id_to_cancel = int(input("Enter the ID of the class you want to cancel: "))
 
-            if (class_id_to_cancel,) in class_ids:
+            if (class_id_to_cancel) in class_ids:
                 cursor.execute(
                     "DELETE FROM ClassMembers WHERE member_id = %s AND class_id = %s",
                     (member_id, class_id_to_cancel)
@@ -482,7 +483,7 @@ def cancel_class(member_id):
                 price = cursor.fetchone()[0]
 
                 cursor.execute(
-                    "UPDATE Members SET balance = balance - %s WHERE member_id = %s",
+                    "UPDATE Members SET balance = balance + %s WHERE member_id = %s",
                     (price, member_id)
                 )
                 connection.commit()

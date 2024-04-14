@@ -172,7 +172,7 @@ def is_trainer_available(trainer_id, day_of_week, start_time, end_time):
         )
         count = cursor.fetchone()[0]
 
-        return count > 0  # If count is greater than 0, trainer is available during the specified time range
+        return count > 0 
 
     except Error as e:
         print(f"Database error: {e}")

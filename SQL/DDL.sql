@@ -51,10 +51,10 @@ CREATE TABLE HealthMetrics (
     metric_id SERIAL PRIMARY KEY,
     member_id INT,
     metric_date DATE,
-    weight INT,
-    steps INT, 
-    calories INT,
-    height INT,
+    weight INT DEFAULT 0,
+    steps INT DEFAULT 0, 
+    calories INT DEFAULT 0,
+    height INT DEFAULT 0,
     FOREIGN KEY (member_id) REFERENCES Members(member_id)
 );
 
