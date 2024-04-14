@@ -1,5 +1,5 @@
 # COMP 3005 Final Project - Big Brothers Gym Management System 🏋️‍♂️
-### Ryan Guo, Matthew Seto 
+### Ryan Guo (101261841), Matthew Seto (101273562)
 ###### Professor Abdelghny Orogat
 ###### April 13, 2024
 Welcome to our gym management system. This is an all-inclusive management system for members, trainers, and admins alike.   
